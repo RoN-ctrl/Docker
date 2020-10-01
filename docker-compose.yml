@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  data-base:
+    image: mysql:latest
+    container_name: data-base
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    networks:
+      - mynet
+  hw24_docker:
+    container_name: hw24_docker
+    build:
+      ./
+    depends_on:
+      - data-base
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://data-base/notebookDB?autoReconnect=true&useSSL=false
+    ports:
+      - 27015:27015
+    networks:
+      - mynet
+
+networks:
+  mynet:
